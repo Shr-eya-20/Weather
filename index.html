@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+       body{
+        display: flex;
+        background: url("cloud.jpg") no-repeat center;
+        background-size: cover;
+        height: 100vh;
+        min-height: 500px;
+        font-family: 'ununtu', sans-serif;
+        
+        .weather-container {
+            text-align: center;
+            margin: 100px auto;
+            width: 600px;
+            padding: 40px;
+
+        }
+        .weather-icon {
+            width: 100px;
+            height: 100px;
+        }
+       }
+    </style>
+</head>
+<body>
+    <div class="weather-container">
+        <h2>Weather App</h2>
+        <div>
+            <label for="city">Enter city:</label>
+            <input type="text" id="city" placeholder="Enter city">
+            <button onclick="getWeather()">Get Weather</button>
+        </div>
+        <div id="weather-info"></div>
+    </div>
+
+    <script>
+        function getWeather() {
+            const apiKey = 'b658fdb9b58217311b19535417930179'; 
+            const city = document.getElementById('city').value;
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const weatherInfo = document.getElementById('weather-info');
+                weatherInfo.innerHTML = `
+                    <h3>${data.name}, ${data.sys.country}</h3>
+                    <p>${new Date(data.dt * 1000).toDateString()}</p>
+                    <p>${data.weather[0].main}</p>
+                    <p>Temperature: ${Math.round(data.main.temp - 273.15)}°C</p>
+                    <p>Humidity: ${data.main.humidity}%</p>
+                `;
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                alert('Error fetching data. Please try again.');
+            });
+        }
+    </script>
+</body>
+</html>
